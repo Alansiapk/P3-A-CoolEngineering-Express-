@@ -2,17 +2,16 @@ const express = require('express');
 const router = express.Router();
 
 // #1 import in the Product model
-const {Product, Category} = require('../models');
+const {Product, Category, Brand} = require('../models');
 const { createProductForm, bootstrapField } = require('../forms');
 
 
 router.get('/', async(req,res)=>{
         // #2 - fetch all the products (ie, SELECT * from products)
         let products = await Product.collection().fetch({
-            withRelated:['category']
+            withRelated:['category', 'brand']
         });
     
-
         //from hbs
         res.render('products/index', {
             'products': products.toJSON() // #3 - convert collection to JSON
@@ -25,7 +24,12 @@ router.get('/create', async(req,res)=>{
     const allCategories = await Category.fetchAll().map((category) => {
         return [category.get('id'), category.get('name')];
     })
-    const productForm = createProductForm(allCategories);
+
+    const allBrands = await Brand.fetchAll().map((brand) => {
+        return [brand.get('id'), brand.get('name')];
+    })
+
+    const productForm = createProductForm(allCategories, allBrands);
     res.render('products/create',{
         'form': productForm.toHTML(bootstrapField)
     })
@@ -36,7 +40,11 @@ router.post('/create', async(req,res)=>{
         return [category.get('id'), category.get('name')];
     })
 
-    const productForm = createProductForm(allCategories);
+    const allBrands = await Brand.fetchAll().map((brand) => {
+        return [brand.get('id'), brand.get('name')];
+    })
+
+    const productForm = createProductForm(allCategories, allBrands);
     productForm.handle(req, {
         'success': async (form) => {
             const product = new Product(); //one row of table
@@ -47,6 +55,8 @@ router.post('/create', async(req,res)=>{
             product.set('indoor_unit', form.data.indoor_unit);
             product.set('outdoor_unit', form.data.outdoor_unit);
             product.set('date_created', form.data.date_created);
+            product.set('category_id', form.data.category_id);
+            product.set('brand_id', form.data.brand_id);
             await product.save();
             res.redirect('/products');  
         },
@@ -76,7 +86,11 @@ const allCategories = await Category.fetchAll().map((category)=>{
     return [category.get('id'), category.get('name')];
 })
 
-    const productForm = createProductForm(allCategories);
+const allBrands = await Brand.fetchAll().map((brand) => {
+    return [brand.get('id'), brand.get('name')];
+})
+
+    const productForm = createProductForm(allCategories, allBrands);
 
     // fill in the existing values
     productForm.fields.name.value = product.get('name');
@@ -86,6 +100,7 @@ const allCategories = await Category.fetchAll().map((category)=>{
     productForm.fields.indoor_unit.value = product.get('indoor_unit');
     productForm.fields.outdoor_unit.value = product.get('outdoor_unit');
     productForm.fields.category_id.value = product.get('category_id');
+    productForm.fields.brand_id.value = product.get('brand_id');
     // productForm.fields.date_created.value = product.get('date_created');
 
     res.render('products/update', {
@@ -101,6 +116,10 @@ router.post('/:product_id/update', async (req, res) => {
         return [category.get('id'), category.get('name')];
     })
 
+    const allBrands = await Brand.fetchAll().map((brand) => {
+        return [brand.get('id'), brand.get('name')];
+    })
+
     // fetch the product that we want to update
     const product = await Product.where({
         'id': req.params.product_id
@@ -108,7 +127,7 @@ router.post('/:product_id/update', async (req, res) => {
         require: true
     });
     // process the form
-    const productForm = createProductForm(allCategories);
+    const productForm = createProductForm(allCategories, allBrands);
 
     productForm.handle(req, {
         'success': async (form) => {
