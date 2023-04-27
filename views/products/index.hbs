@@ -9,6 +9,8 @@
             <th>Brand</th>
             <th>Category</th>
             <th>Cost</th>
+            <th>Application</th>
+            <th>Tags</th>
             <th>Description</th>
             <th>Warranty</th>
             <th>Indoor Unit</th>
@@ -37,6 +39,15 @@
             <td>
                 {{this.cost}}
             </td>
+            <td>
+                {{this.application.name}}
+            </td>
+            <td>
+                {{#each this.tags}}
+                <span class="badge bg-secondary">{{this.name}}</span>
+                {{/each}}
+            </td>
+
             <td>
                 {{this.description}}
             </td>

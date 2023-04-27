@@ -11,8 +11,21 @@ const Product = bookshelf.model('Product', {
     },
     brand() {
         return this.belongsTo('Brand')
+    },
+    application() {
+        return this.belongsTo('Application')
+    },
+    tags() {
+        return this.belongsToMany('Tag');
     }
 });
+
+const Tag = bookshelf.model('Tag',{
+    tableName: 'tags',
+    products() {
+        return this.belongsToMany('Product')
+    }
+})
 
 const Category = bookshelf.model('Category',{
     tableName: 'categories',
@@ -28,4 +41,11 @@ const Brand = bookshelf.model('Brand',{
     }
 })
 
-module.exports = { Product, Category, Brand };
+const Application = bookshelf.model('Application',{
+    tableName: 'applications',
+    products() {
+        return this.hasMany('Product', 'application_id');
+    }
+})
+
+module.exports = { Product, Category, Brand, Application, Tag };
