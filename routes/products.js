@@ -7,6 +7,8 @@ const { createProductForm, bootstrapField } = require('../forms');
 
 
 router.get('/', async (req, res) => {
+
+  
     // #2 - fetch all the products (ie, SELECT * from products)
     let products = await Product.collection().fetch({
         withRelated: ['category', 'brand', 'application', 'tags']
@@ -15,6 +17,7 @@ router.get('/', async (req, res) => {
     //from hbs
     res.render('products/index', {
         'products': products.toJSON() // #3 - convert collection to JSON
+     
     })
 
 })
@@ -80,7 +83,7 @@ router.post('/create', async (req, res) => {
             if (tags) {
                 await product.tags().attach(tags.split(","));
             }
-
+            req.flash("success_messages", `New Product ${product.get('name')} has been created`)
             res.redirect('/products');
         },
         'empty': async (form) => {

@@ -12,3 +12,6 @@ INSERT INTO products (name, cost, description, warranty, indoor_unit, outdoor_un
 
 INSERT INTO applications (name) VALUES
 ("Residential"),("Commercial"),("Industrial")
+
+INSERT INTO tags (name) VALUES
+("R32 gas"),("Smart WIFI Control"),("PM2.5 filters"), ("Auto 3D airflow"), ("NEA 5-ticks"), ("Low Noise 19dB")
