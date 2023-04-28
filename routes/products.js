@@ -40,9 +40,14 @@ router.get('/create', async (req, res) => {
 
     const productForm = createProductForm(allCategories, allBrands, allApplications, allTags);
     res.render('products/create', {
-        'form': productForm.toHTML(bootstrapField)
+            'form': productForm.toHTML(bootstrapField),
+            cloudinaryName: process.env.CLOUDINARY_NAME,
+            cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
+            cloudinaryPreset: process.env.CLOUDINARY_UPLOAD_PRESET
+        })
+    
     })
-})
+
 
 router.post('/create', async (req, res) => {
     const allCategories = await Category.fetchAll().map((category) => {
