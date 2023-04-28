@@ -1,9 +1,15 @@
 const express = require("express");
 const router = express.Router();
-
+const crypto = require('crypto');
 // import in the User model
 const { User } = require('../models');
-
+const {checkIfAuthenticated} = require('../middlewares');
+const csrf = require('csurf');
+const generateHashedPassword = (password) => {
+    const sha256 = crypto.createHash('sha256');
+    const hash = sha256.update(password).digest('base64');
+    return hash;
+}
 const { createRegistrationForm, bootstrapField, createLoginForm } = require('../forms');
 
 router.get('/signup', (req,res)=>{
@@ -20,7 +26,7 @@ router.post('/signup', (req, res) => {
         success: async (form) => {
             const user = new User({
                 'username': form.data.username,
-                'password': form.data.password,
+                'password': generateHashedPassword(form.data.password),
                 'email': form.data.email
             });
             await user.save();
@@ -69,7 +75,7 @@ router.post('/login', async (req, res) => {
                 res.redirect('/users/login');
             } else {
                 // check if the password matches
-                if (user.get('password') === form.data.password) {
+                if (user.get('password') === generateHashedPassword(form.data.password)) {
                     // add to the session that login succeed
 
                     // store the user details
@@ -94,7 +100,8 @@ router.post('/login', async (req, res) => {
     })
 })
 
-router.get('/profile', (req, res) => {
+//chainof responsibility
+router.get('/profile',[checkIfAuthenticated], (req, res) => {
     const user = req.session.user;
     if (!user) {
         req.flash('error_messages', 'You do not have permission to view this page');
