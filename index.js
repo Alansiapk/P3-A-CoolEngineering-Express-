@@ -7,6 +7,7 @@ const FileStore = require('session-file-store')(session);
 require("dotenv").config();
 const csrf = require('csurf');
 
+
 // create an instance of express app
 let app = express();
 
@@ -73,13 +74,16 @@ app.use(function(req,res,next){
 const landingRoutes = require('./routes/landing.js');
 const productRoutes = require('./routes/products.js');
 const userRoutes = require('./routes/users.js');
+const cloudinaryRoutes = require('./routes/cloudinary.js');
 
 async function main() {
     app.use('/', landingRoutes);
 
     app.use('/products', productRoutes);
 
-    app.use('/users', userRoutes)
+    app.use('/users', userRoutes);
+
+    app.use('/cloudinary', cloudinaryRoutes);
 
 }
 

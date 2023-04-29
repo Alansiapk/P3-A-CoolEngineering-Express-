@@ -3,9 +3,21 @@
 {{#block 'content'}}
 <h1>Update Product: {{product.name}}</h1>
 <form method="POST">
-    <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
+    <input type="hidden" name="_csrf" value="{{csrfToken}}" />
     {{{form}}}
-    <input type="submit" value="Update Product" class="btn btn-primary mt-3"/>
+    <!-- 1. shows the image if exists -->
+    <div>
+        {{#if product.image_url}}
+        <img src="{{product.image_url}}" id="uploaded_image" />
+        {{else}}
+        <img src="" style="display:none" id="uploaded_image" />
+        {{/if}}
+    </div>
+    <div>
+        <a href="#" class="btn btn-primary" id="upload_widget">Upload</a>
+    </div>
+
+    <input type="submit" value="Update Product" class="btn btn-primary mt-3" />
 </form>
 {{/block}}
 

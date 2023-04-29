@@ -143,6 +143,8 @@ router.get('/:product_id/update', async (req, res) => {
     productForm.fields.brand_id.value = product.get('brand_id');
     productForm.fields.application_id.value = product.get('application_id');
     // productForm.fields.date_created.value = product.get('date_created');
+        // 1 - set the image url in the product form
+    productForm.fields.image_url.value = product.get('image_url');
 
     // fill in the multi-select for the tags
     let selectedTags = await product.related('tags').pluck('id');
@@ -151,7 +153,12 @@ router.get('/:product_id/update', async (req, res) => {
 
     res.render('products/update', {
         'form': productForm.toHTML(bootstrapField),
-        'product': product.toJSON()
+        'product': product.toJSON(),
+        // 2 - send to the HBS file the cloudinary information
+        cloudinaryName: process.env.CLOUDINARY_NAME,
+        cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
+        cloudinaryPreset: process.env.CLOUDINARY_UPLOAD_PRESET
+
     })
 
 })

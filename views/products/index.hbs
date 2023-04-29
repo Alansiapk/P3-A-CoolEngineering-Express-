@@ -1,19 +1,19 @@
 {{#extends 'base'}}
-{{#if success_messages }}        
-            {{#each success_messages}}
-                <div class="alert alert-success">
-                    {{this}}
-                </div>
-            {{/each}}        
-        {{/if}}
+{{#if success_messages }}
+{{#each success_messages}}
+<div class="alert alert-success">
+    {{this}}
+</div>
+{{/each}}
+{{/if}}
 
-        {{#if error_messages}}
-            {{#each error_messages}}
-                <div class="alert alert-danger">
-                    {{this}}
-                </div>
-            {{/each}}       
-        {{/if}}
+{{#if error_messages}}
+{{#each error_messages}}
+<div class="alert alert-danger">
+    {{this}}
+</div>
+{{/each}}
+{{/if}}
 
 {{#block 'content'}}
 <table class="table">
@@ -23,6 +23,7 @@
             <th>Name</th>
             <th>Brand</th>
             <th>Category</th>
+             <th>Images</th>
             <th>Cost</th>
             <th>Application</th>
             <th>Tags</th>
@@ -50,7 +51,11 @@
             <td>
                 {{this.category.name}}
             </td>
-
+            <td>
+                {{#if image_url}}
+                <img src="{{image_url}}" class="image-fluid" style="width:150%; height:auto;"/>
+                {{/if}}
+            </td>
             <td>
                 {{this.cost}}
             </td>
