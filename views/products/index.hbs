@@ -16,6 +16,13 @@
 {{/if}}
 
 {{#block 'content'}}
+
+<h2>Search</h2>
+<form method="GET">
+   {{{form}}}
+    <input type="submit" class="mb-3 mt-3 btn btn-primary" value="Search"/>
+</form>
+
 <table class="table">
     <thead>
         <tr>
@@ -23,7 +30,7 @@
             <th>Name</th>
             <th>Brand</th>
             <th>Category</th>
-             <th>Images</th>
+            <th>Images</th>
             <th>Cost</th>
             <th>Application</th>
             <th>Tags</th>
@@ -53,7 +60,7 @@
             </td>
             <td>
                 {{#if image_url}}
-                <img src="{{image_url}}" class="image-fluid" style="width:150%; height:auto;"/>
+                <img src="{{image_url}}" class="image-fluid" style="width:150%; height:auto;" />
                 {{/if}}
             </td>
             <td>

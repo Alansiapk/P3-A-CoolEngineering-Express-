@@ -3,21 +3,91 @@ const router = express.Router();
 
 // #1 import in the Product model
 const { Product, Category, Brand, Application, Tag } = require('../models');
-const { createProductForm, bootstrapField } = require('../forms');
+const { createProductForm, bootstrapField, createSearchForm } = require('../forms');
 
 
 router.get('/', async (req, res) => {
+    const allCategories = await Category.fetchAll().map((category) => {
+        return [category.get('id'), category.get('name')];
+    })
+    allCategories.unshift([0, '----']);
 
-  
-    // #2 - fetch all the products (ie, SELECT * from products)
-    let products = await Product.collection().fetch({
-        withRelated: ['category', 'brand', 'application', 'tags']
-    });
+    const allBrands = await Brand.fetchAll().map((brand) => {
+        return [brand.get('id'), brand.get('name')];
+    })
+    allBrands.unshift([0, '----']);
 
-    //from hbs
-    res.render('products/index', {
-        'products': products.toJSON() // #3 - convert collection to JSON
-     
+    const allApplications = await Application.fetchAll().map((application) => {
+        return [application.get('id'), application.get('name')];
+    })
+    allApplications.unshift([0, '----']);
+
+    const allTags = await Tag.fetchAll().map(tag => [tag.get('id'), tag.get('name')]);
+    const searchForm = createSearchForm(allCategories, allBrands, allApplications, allTags);
+    let q = Product.collection();
+    searchForm.handle(req, {
+        'empty': async (form) => {
+
+            let products = await q.fetch({
+                withRelated: ['category', 'brand', 'application', 'tags']
+            })
+            res.render('products/index', {
+                'products': products.toJSON(),
+                'form': form.toHTML(bootstrapField)
+            })
+
+        },
+        'error': async (form) => {
+            //q execute the query
+            let products = await q.fetch({
+                withRelated: ['category', 'brand', 'application', 'tags']
+            })
+            res.render('products/index', {
+                'products': products.toJSON(),
+                'form': form.toHTML(bootstrapField)
+            })
+        },
+        'success': async (form) => {
+            if (form.data.name) {
+                // add in: AND WHERE name LIKE '%<somename>%'
+                q.where('name', 'LIKE', '%' + form.data.name + '%');
+            }
+
+            if (form.data.min_cost) {
+                q.where('cost', '>=', form.data.min_cost);
+            }
+
+            if (form.data.max_cost) {
+                q.where('cost', '<=', form.data.max_cost);
+            }
+
+            if (form.data.category_id && form.data.category_id != "0") {
+                q.where('category_id', '=', form.data.category_id);
+            }
+
+            if (form.data.brand_id && form.data.brand_id != "0") {
+                q.where('brand_id', '=', form.data.brand_id);
+            }
+
+            if (form.data.application_id && form.data.application_id != "0") {
+                q.where('application_id', '=', form.data.application_id);
+            }
+
+            if (form.data.tags) {
+                // JOIN products_tags ON products.id = products_tags.product_id
+                q.query('join', 'products_tags', 'products.id', 'product_id')
+                  .where('tag_id', 'in', form.data.tags.split(','))
+            }
+
+            let products = await q.fetch({
+                'withRelated':['category', 'brand', 'application', 'tags']
+            });
+
+            res.render('products/index',{
+                products: products.toJSON(),
+                form: form.toHTML(bootstrapField)
+            })
+        }
     })
 
 })
@@ -40,13 +110,13 @@ router.get('/create', async (req, res) => {
 
     const productForm = createProductForm(allCategories, allBrands, allApplications, allTags);
     res.render('products/create', {
-            'form': productForm.toHTML(bootstrapField),
-            cloudinaryName: process.env.CLOUDINARY_NAME,
-            cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
-            cloudinaryPreset: process.env.CLOUDINARY_UPLOAD_PRESET
-        })
-    
+        'form': productForm.toHTML(bootstrapField),
+        cloudinaryName: process.env.CLOUDINARY_NAME,
+        cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
+        cloudinaryPreset: process.env.CLOUDINARY_UPLOAD_PRESET
     })
+
+})
 
 
 router.post('/create', async (req, res) => {
@@ -143,7 +213,7 @@ router.get('/:product_id/update', async (req, res) => {
     productForm.fields.brand_id.value = product.get('brand_id');
     productForm.fields.application_id.value = product.get('application_id');
     // productForm.fields.date_created.value = product.get('date_created');
-        // 1 - set the image url in the product form
+    // 1 - set the image url in the product form
     productForm.fields.image_url.value = product.get('image_url');
 
     // fill in the multi-select for the tags
@@ -158,12 +228,12 @@ router.get('/:product_id/update', async (req, res) => {
         cloudinaryName: process.env.CLOUDINARY_NAME,
         cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
         cloudinaryPreset: process.env.CLOUDINARY_UPLOAD_PRESET
-
     })
 
 })
 
 router.post('/:product_id/update', async (req, res) => {
+
 
     const allCategories = await Category.fetchAll().map((category) => {
         return [category.get('id'), category.get('name')];
@@ -190,7 +260,7 @@ router.post('/:product_id/update', async (req, res) => {
     productForm.handle(req, {
         'success': async (form) => {
             let { tags, ...productData } = form.data;
-            product.set(form.data); //overwrite the original data
+            product.set(productData); //overwrite the original data
             product.save();
 
             // update the tags
@@ -213,6 +283,7 @@ router.post('/:product_id/update', async (req, res) => {
             })
         }
     })
+
 })
 
 router.get('/:product_id/delete', async (req, res) => {
