@@ -39,7 +39,18 @@ app.use(session({
 app.use(flash())
 
 // enable CSRF
-app.use(csrf());
+// app.use(csrf());
+// note: replaced app.use(csrf()) with the following:
+const csurfInstance = csrf();
+app.use(function(req,res,next){
+  console.log("checking for csrf exclusion")
+  // exclude whatever url we want from CSRF protection
+  if (req.url === "/checkout/process_payment") {
+    return next();
+  }
+  csurfInstance(req,res,next);
+})
+
 
 app.use(function (err, req, res, next) {
   if (err && err.code == "EBADCSRFTOKEN") {
@@ -65,7 +76,9 @@ app.use(function (req, res, next) {
 
 // Share CSRF with hbs files
 app.use(function(req,res,next){
-  res.locals.csrfToken = req.csrfToken();
+  if (req.csrfToken) {
+    res.locals.csrfToken = req.csrfToken();
+}
   next();
 })
 
@@ -76,6 +89,7 @@ const productRoutes = require('./routes/products.js');
 const userRoutes = require('./routes/users.js');
 const cloudinaryRoutes = require('./routes/cloudinary.js');
 const cartRoutes = require('./routes/shoppingCart.js');
+const checkoutRoutes = require("./routes/checkout.js")
 
 async function main() {
     app.use('/', landingRoutes);
@@ -87,6 +101,8 @@ async function main() {
     app.use('/cloudinary', cloudinaryRoutes);
 
     app.use('/shoppingCart', cartRoutes);
+
+    app.use("/checkout", checkoutRoutes)
 
 }
 
