@@ -49,7 +49,17 @@ const Application = bookshelf.model('Application',{
 })
 
 const User = bookshelf.model('User',{
-    tableName: 'users'
+    tableName: 'users',
+    role(){
+        return this.belongsTo("Role")
+    }
+})
+
+const Role = bookshelf.model('Role',{
+    tableName: 'roles',
+    users() {
+        return this.hasMany('User', 'role_id');
+    }
 })
 
 const CartItem = bookshelf.model('CartItem', {
@@ -62,4 +72,4 @@ const CartItem = bookshelf.model('CartItem', {
 
 
 
-module.exports = { Product, Category, Brand, Application, Tag, User, CartItem };
+module.exports = { Product, Category, Brand, Application, Tag, User, CartItem, Role};
