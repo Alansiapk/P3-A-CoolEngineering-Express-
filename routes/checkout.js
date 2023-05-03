@@ -8,6 +8,7 @@ router.get('/', async (req, res) => {
     const cart = new CartServices(req.session.user.id);
 
     // get all the items from the cart
+    
     let items = await cart.getCart();
 
     // step 1 - create line items
@@ -39,7 +40,7 @@ router.get('/', async (req, res) => {
     // step 2 - create stripe payment
     let metaData = JSON.stringify(meta);
     const payment = {
-        payment_method_types: ['card'],
+        payment_method_types: ['card', 'grabpay'],
         mode:'payment',
         line_items: lineItems,
         success_url: process.env.STRIPE_SUCCESS_URL + '?sessionId={CHECKOUT_SESSION_ID}',
@@ -57,6 +58,7 @@ router.get('/', async (req, res) => {
     })
 
 
+
 })
 
 router.post('/process_payment', express.raw({type: 'application/json'}), async (req, res) => {
@@ -66,13 +68,14 @@ router.post('/process_payment', express.raw({type: 'application/json'}), async (
     let event;
     try {
         event = Stripe.webhooks.constructEvent(payload, sigHeader, endpointSecret);
-
     } catch (e) {
         res.send({
             'error': e.message
         })
         console.log(e.message)
     }
+
+    console.log(event)
     if (event.type == 'checkout.session.completed') {
         let stripeSession = event.data.object;
         console.log(stripeSession);
