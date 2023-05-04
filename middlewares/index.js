@@ -1,4 +1,6 @@
 const checkIfAuthenticated = (req, res, next) => {
+
+    //STATEFUL
     if (req.session.user) {
         next()
     } else {
@@ -13,6 +15,7 @@ const checkIfAuthenticatedJWT = (req, res, next) => {
     const authHeader = req.headers.authorization;
 
     if (authHeader) {
+        //BEARER SPACE TOKEN (RESTFUL API)
         const token = authHeader.split(' ')[1];
 
         jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {

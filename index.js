@@ -110,6 +110,7 @@ async function main() {
     app.use("/checkout", checkoutRoutes);
     
     app.use('/api/products', express.json(), api.products);
+    
     app.use('/api/users', express.json(), api.users);
 
 }
