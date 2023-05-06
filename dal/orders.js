@@ -53,7 +53,7 @@ const getOrdersByUserId = async (userId) => {
         user_id: userId
     }).fetchAll({
         require: false,
-        withRelated: ['OrderStatus']
+        withRelated: ['orderStatus']
     })
 }
 

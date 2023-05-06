@@ -174,5 +174,38 @@ const createSearchForm = (categories, brands, applications, tags) => {
     })
 }
 
+const createOrderSearchForm = (statuses) => {
+    return forms.create({
+        order_id: fields.string({
+            label: 'Order ID',
+            required: false,
+            errorAfterField: true
+        }),
+        order_status_id: fields.string({
+            label: 'Status',
+            required: false,
+            errorAfterField: true,
+            widget: widgets.select(),
+            choices: statuses
+        }),
+        order_date: fields.date({
+            required: false,
+            errorAfterField: true,
+            widget: widgets.date()
+        })
+    })
+}
 
-module.exports = {createProductForm, bootstrapField, createRegistrationForm, createLoginForm, createSearchForm}
+const createOrderStatusForm = (statuses) => {
+    return forms.create({
+        order_status_id: fields.string({
+            label: 'Order Status',
+            required: false,
+            errorAfterField: true,
+            widget: widgets.select(),
+            choices: statuses
+        })
+    })
+}
+module.exports = {createProductForm, bootstrapField, createRegistrationForm, createLoginForm, createSearchForm, 
+createOrderSearchForm, createOrderStatusForm}
