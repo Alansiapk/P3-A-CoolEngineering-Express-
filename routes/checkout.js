@@ -109,10 +109,21 @@ router.post('/process_payment', express.raw({type: 'application/json'}), async (
             billing_country: stripeSession.customer_details.address.country,
             billing_postal: stripeSession.customer_details.address.postal,
             billing_address_line_1: stripeSession.customer_details.address.line1,
-            billing_address_line_2: stripeSession.customer_details.address.line2
+            billing_address_line_2: stripeSession.customer_details.address.line2,
+            stripe_id: stripeSession.id
         }
 
-        const createOrder = orderDataLayer.createOrder(orderData);
+        const createOrder = await orderDataLayer.createOrder(orderData);
+
+        const orderDetails = await orderDataLayer.getOrderByStripeId(stripeSession.id);
+        
+        metadataToJson.forEach(order => {
+            const newItem = orderDataLayer.createOrderItem({
+                "quantity": order.quantity,
+                "product_id": order.product_id,
+                "order_id": orderDetails.id
+            })
+        })
 
 
     }

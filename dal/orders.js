@@ -22,6 +22,15 @@ const getAllOrders = async () => {
     return orders;
 }
 
+const getOrderByStripeId = async (stripeId) => {
+    const order = await Order.where({
+        "stripe_id": stripeId
+    }).fetch({
+        require: true
+    });
+    return order;
+}
+
 const getAllStatuses = async () => {
     const order_statuses = await OrderStatus.fetchAll().map((order_status) => {
         return [order_status.get('id'), order_status.get('order_status')];
@@ -79,4 +88,5 @@ module.exports = {
     getOrdersByUserId,
     updateStatus,
     deleteOrder,
+    getOrderByStripeId
 }
