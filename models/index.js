@@ -99,6 +99,7 @@ const Order = bookshelf.model("Order", {
     orderItems() {
         return this.hasMany('OrderItem');
     },
+    
 });
 
 const OrderStatus = bookshelf.model("OrderStatus", {

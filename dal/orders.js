@@ -1,5 +1,6 @@
 const {Order, OrderStatus, OrderItem, User} = require('../models')
 
+//
 const createOrder = async (orderData) => {
     const order = new Order (orderData);
     await order.save();
@@ -7,11 +8,21 @@ const createOrder = async (orderData) => {
     return order;
 }
 
+//
 const createOrderItem = async (orderItemData) => {
     const orderItem = new OrderItem (orderItemData)
     await orderItem.save();
 
     return orderItem;
+}
+//
+const getOrderByStripeId = async (stripeId) => {
+    const order = await Order.where({
+        "stripe_id": stripeId
+    }).fetch({
+        require: true
+    });
+    return order;
 }
 
 const getAllOrders = async () => {
@@ -22,14 +33,6 @@ const getAllOrders = async () => {
     return orders;
 }
 
-const getOrderByStripeId = async (stripeId) => {
-    const order = await Order.where({
-        "stripe_id": stripeId
-    }).fetch({
-        require: true
-    });
-    return order;
-}
 
 const getAllStatuses = async () => {
     const order_statuses = await OrderStatus.fetchAll().map((order_status) => {

@@ -14,15 +14,16 @@ const {createOrder,createOrderItem,getAllOrders,getAllStatuses,getOrderById,
 const { Order, OrderItem } = require('../models');
 const async = require('hbs/lib/async');
 
-router.get('/', async (req,res) =>{
-const orderSearchForm = createOrderSearchForm(await getAllStatuses());
-    let searchQuery = Order.collection();
-    orderSearchForm.handle(req,{
-        empty: async(form) => {
-            const orders = await searchQuery.fetch({
-                withRelated:['user', 'orderStatus', 'orderItems']
-            })
-        }
-    })
+router.get("/", async (req, res) => {
 
+    const orders = await getAllOrders();
+
+    console.log(orders.toJSON())
+
+    res.render("orders/index", {
+        orders: orders.toJSON()
+    })
 })
+
+
+module.exports = router;
