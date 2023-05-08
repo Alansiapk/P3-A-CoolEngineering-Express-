@@ -45,7 +45,7 @@ const csurfInstance = csrf();
 app.use(function(req,res,next){
   console.log("checking for csrf exclusion")
   // exclude whatever url we want from CSRF protection
-  if (req.url === "/checkout/process_payment"|| req.url.slice(0,5)=="/api/") {
+  if (req.url == "/checkout/process_payment"|| req.url.slice(0,5)=="/api/") {
     return next();
   }
   csurfInstance(req,res,next);
