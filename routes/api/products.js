@@ -9,6 +9,22 @@ router.get('/', async(req,res)=>{
     res.send(await productDataLayer.getAllProducts())
 })
 
+router.get("/brands", async (req, res) => {
+    res.send(await productDataLayer.getAllBrands())
+})
+
+router.get("/applications", async (req, res) => {
+    res.send(await productDataLayer.getAllApplications())
+})
+
+router.get("/categories", async (req, res) => {
+    res.send(await productDataLayer.getAllCategories())
+})
+
+router.get("/tags", async (req, res) => {
+    res.send(await productDataLayer.getAllTags())
+})
+
 router.post('/', async (req, res) => {
     const allCategories = await productDataLayer.getAllCategories();
     const allTags = await productDataLayer.getAllTags();

@@ -6,6 +6,7 @@ const flash = require('connect-flash');
 const FileStore = require('session-file-store')(session);
 require("dotenv").config();
 const csrf = require('csurf');
+const cors = require("cors");
 
 
 // create an instance of express app
@@ -28,6 +29,8 @@ app.use(
   })
 );
 
+app.use(cors());
+
 // set up sessions
 app.use(session({
   store: new FileStore(),
@@ -37,6 +40,7 @@ app.use(session({
 }))
 
 app.use(flash())
+
 
 // enable CSRF
 // app.use(csrf());
@@ -94,7 +98,8 @@ const orderRoutes = require("./routes/orders.js")
 const api = {
   products: require('./routes/api/products.js'),
   users: require('./routes/api/users.js'),
-  cart: require('./routes/api/cart.js')
+  cart: require('./routes/api/cart.js'),
+  orders: require('./routes/api/orders.js')
 }
 
 
@@ -118,6 +123,8 @@ async function main() {
     app.use('/api/users', express.json(), api.users);
 
     app.use('/api/cart', express.json(), api.cart)
+
+    app.use("/api/orders", express.json(), api.orders)
 
 }
 
