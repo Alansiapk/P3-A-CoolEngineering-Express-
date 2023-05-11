@@ -9,6 +9,11 @@ router.get('/', async(req,res)=>{
     res.send(await productDataLayer.getAllProducts())
 })
 
+router.get('/detail/:product_id', async(req,res)=>{
+    let productId = req.params.product_id;
+    res.send(await productDataLayer.getProductByID(productId))
+} )
+
 router.get("/brands", async (req, res) => {
     res.send(await productDataLayer.getAllBrands())
 })

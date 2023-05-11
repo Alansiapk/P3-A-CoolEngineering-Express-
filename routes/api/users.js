@@ -42,13 +42,25 @@ router.post('/login', async (req, res) => {
     });
 
     if (user && user.get('password') == getHashedPassword(req.body.password)) {
-        let accessToken = generateToken(user.toJSON(), process.env.TOKEN_SECRET, "10m");
+        
+        req.session.user = {
+            id: user.get('id'),
+            username: user.get('username'),
+            email: user.get('email')
+        }
+
+        console.log('login success===============')
+        console.log(req.session.user)
+
+        let accessToken = generateToken(user.toJSON(), process.env.TOKEN_SECRET, "30m");
         let refreshToken = generateToken(user.toJSON(), process.env.REFRESH_TOKEN_SECRET, "3w");
         // let refreshToken = generateAccessToken(user.toJSON(), process.env.REFRESH_TOKEN_SECRET, '7d');
         res.send({
             accessToken, refreshToken
 
         })
+
+
     } else {
         res.send({
             'error': 'Wrong email or password'

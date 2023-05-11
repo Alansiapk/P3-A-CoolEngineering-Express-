@@ -10,6 +10,8 @@ router.get('/:user_id', async (req, res) => {
 })
 
 router.post('/:product_id/add', async (req, res) => {
+    console.log('adding to cart ==================')
+    console.log(req.session.user);
     const cartServices = new CartServices(req.session.user.id)
 
     let addProductsToCart = await cartServices.addToCart(req.params.product_id, 1);
