@@ -68,6 +68,18 @@ router.post('/login', async (req, res) => {
     }
 })
 
+router.post('/signup', async (req, res) => {
+    let user = new User({
+        'first_name': req.body.first_name,
+        'last_name': req.body.last_name,
+        'email': req.body.email,
+        'password': getHashedPassword(req.body.password),
+        'role_id': 1
+    })
+
+    await user.save()
+    res.send(user);
+})
 router.get('/profile', checkIfAuthenticatedJWT, async (req, res) => {
     const user = req.user;
     res.send(user);
@@ -129,6 +141,7 @@ router.post('/logout', async (req, res) => {
     }
 
 })
+
 
 
 module.exports = router;
