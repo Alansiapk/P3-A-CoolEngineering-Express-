@@ -11,10 +11,13 @@ router.get('/:user_id/checkout', express.json(), async(req,res)=>{
 
     //step1- create line items
 
-    const cart = await CartServices.getCart(req.params.user_id)
+    // const cartItems = await CartServices.getCart(req.params.user_id)
+    const cartServices = new CartServices(req.params.user_id);
+    const cartItems = await cartServices.getCart()
+
     let lineItems =[];
     let meta =[];
-    for (let i of items) {
+    for (let i of cartItems) {
         const lineItem = {
              'quantity': i.get('quantity'),
              'price_data': {
@@ -32,9 +35,9 @@ router.get('/:user_id/checkout', express.json(), async(req,res)=>{
          lineItems.push(lineItem);
          // save the quantity data along with the product id
          meta.push({
-            'user_id': req.session.user.id,
-            'product_id' : i.get('product_id'),
-            'quantity': i.get('quantity')
+            user_id: i.get('user_id'),
+            product_id: i.get('variant_id'),
+            quantity: i.get('quantity')
         })
     }
 
