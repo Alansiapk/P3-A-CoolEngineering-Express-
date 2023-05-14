@@ -60,5 +60,46 @@ router.post('/', async (req, res) => {
 
 })
 
+router.post('/search', async (req, res) => {
+    const q = Product.collection();
+
+    if (Object.keys(req.body).length === 0) {
+        const products = await q.fetch({
+            withRelated: ['application', 'brand', 'category', 'tags']
+        })
+        res.send(products)
+    }
+    else if (Object.keys(req.body).length != 0) {
+        if (req.body.name) {
+            q.where('name', 'like', '%' + req.body.name + '%')
+        }
+        if (req.body.min_cost) {
+            q.where('cost', '>=', req.body.min_cost)
+        }
+        if (req.body.max_cost) {
+            q.where('cost', '<=', req.body.max_cost)
+        }
+        if (req.body.applicationl_id) {
+            q.where('application_id', '=', req.body.application_id)
+        }
+        if (req.body.category_id) {
+            q.where('category_id', '=', req.body.category_id)
+        }
+        if (req.body.brand_id) {
+            q.where('brand_id', '=', req.body.brand_id)
+        }
+        if (req.body.tags) {
+            q.query('join', 'tags_products', 'products.id', 'product_id')
+            .where('tag_id', 'in', form.data.tags.split(','))
+        }
+        const products = await q.fetch({
+            withRelated: ['application', 'brand', 'category', 'tags']
+        })
+        res.send(products);
+    }
+    
+})
+
+
 
 module.exports = router;
