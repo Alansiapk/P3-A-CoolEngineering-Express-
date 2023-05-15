@@ -18,7 +18,7 @@ router.get("/", async (req, res) => {
 
     const orders = await getAllOrders();
 
-    console.log(orders.toJSON())
+
 
     res.render("orders/index", {
         orders: orders.toJSON()

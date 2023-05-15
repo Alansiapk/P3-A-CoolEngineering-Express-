@@ -70,6 +70,7 @@ router.post('/search', async (req, res) => {
         res.send(products)
     }
     else if (Object.keys(req.body).length != 0) {
+        console.log(req.body.tags);
         if (req.body.name) {
             q.where('name', 'like', '%' + req.body.name + '%')
         }
@@ -79,7 +80,7 @@ router.post('/search', async (req, res) => {
         if (req.body.max_cost) {
             q.where('cost', '<=', req.body.max_cost)
         }
-        if (req.body.applicationl_id) {
+        if (req.body.application_id) {
             q.where('application_id', '=', req.body.application_id)
         }
         if (req.body.category_id) {
@@ -89,11 +90,11 @@ router.post('/search', async (req, res) => {
             q.where('brand_id', '=', req.body.brand_id)
         }
         if (req.body.tags) {
-            q.query('join', 'tags_products', 'products.id', 'product_id')
+            q.query('join', 'products_tags', 'products.id', 'product_id')
             .where('tag_id', 'in', form.data.tags.split(','))
         }
         const products = await q.fetch({
-            withRelated: ['application', 'brand', 'category', 'tags']
+            withRelated: ['application', 'brand', 'category', 'tags',]
         })
         res.send(products);
     }

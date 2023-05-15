@@ -22,7 +22,7 @@ router.get('/', async (req, res) => {
             'quantity': i.get('quantity'),
             'price_data': {
                 'currency':'SGD',
-                'unit_amount': i.related('product').get('cost'),
+                'unit_amount': (i.related('product').get('cost')) * 100,
                 'product_data':{
                     'name': i.related('product').get('name'),  
                 }
