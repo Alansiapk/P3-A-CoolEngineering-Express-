@@ -1,0 +1,45 @@
+{{#extends 'base'}}
+{{#block 'content'}}
+
+<h1>Update Orders</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Customer Name</th>
+            <th>User Email</th>
+            <th>Shipping Details</th>
+            <th>Payment Type</th>
+            <th>Order Status</th>
+            <th>Total Cost</th>
+            <th>Order Date</th>
+        </tr>
+    </thead>
+<tbody>
+        {{#each orders}}
+        <tr>
+            <td>{{this.id}}</td>
+            <td>{{this.user.username}}</td>
+            <td>{{this.user.email}}</td>
+            <td>{{this.billing_address_line_1}} {{this.billing_address_line_2}}</td>
+            <td>{{this.payment_type}}</td>
+            <td>{{this.orderStatus.order_status}}</td>
+            <td>{{this.total_cost}}</td>
+            <td>
+                {{this.order_date}}
+            </td>
+            <td>
+                <form action="/orders/{{order.id}}/update" method="POST">
+                    <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+                    {{{form}}}
+                    <input type="submit" value="Update" class="btn btn-sm btn-dark btn-outline-light my-3">
+                </form>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+
+{{/block}}
+{{/extends}}
