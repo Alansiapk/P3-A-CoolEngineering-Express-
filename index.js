@@ -100,7 +100,9 @@ const api = {
   users: require('./routes/api/users.js'),
   cart: require('./routes/api/cart.js'),
   orders: require('./routes/api/orders.js'),
+  
   checkout: require('./routes/api/checkout.js')
+
 }
 
 

@@ -80,6 +80,12 @@ const deleteOrder = async (orderId) => {
     const order = await getOrderById(orderId);
     await order.destroy();
 }
+async function getAllOrderStatus(){
+    const allOrderStatus = await OrderStatus.fetchAll().map((status) => {
+        return [status.get('id'), status.get('order_status')]
+    })
+    return allOrderStatus;
+}
 
 module.exports = {
     createOrder,
@@ -91,5 +97,6 @@ module.exports = {
     getOrdersByUserId,
     updateStatus,
     deleteOrder,
-    getOrderByStripeId
+    getOrderByStripeId,
+    getAllOrderStatus
 }

@@ -1,8 +1,33 @@
 {{#extends 'base'}}
+
+{{#block 'content'}}
+<h1>Update Product status: {{orders.id}}</h1>
+<form method="POST">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+    {{{form}}}
+  
+    <div style="display: inline-block;" class="mt-2">
+        <input type="submit" value="Update order status" class="btn btn-primary" />
+    </div>
+</form>
+{{/block}}
+
+{{/extends}}
+{{!-- {{#extends 'base'}}
 {{#block 'content'}}
 
-<h1>Update Orders</h1>
-<table class="table">
+<h1>Update Orders status, order id : {{orders.id}}</h1>
+<form method="POST">
+     <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+     {{{form}}}
+     <div style="display: inline-block;" class="mt-2">
+        <input type="submit" value="Update order status" class="btn btn-primary"/>
+     </div>
+</form> --}}
+
+
+
+{{!-- <table class="table">
     <thead>
         <tr>
             <th>ID</th>
@@ -38,8 +63,8 @@
         </tr>
         {{/each}}
     </tbody>
-</table>
+</table> --}}
 
 
-{{/block}}
-{{/extends}}
+{{!-- {{/block}}
+{{/extends}} --}}

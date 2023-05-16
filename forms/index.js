@@ -207,5 +207,20 @@ const createOrderStatusForm = (statuses) => {
         })
     })
 }
+
+const updateOrderStatusForm = (status) => {
+    return forms.create({
+        'order_status_id': fields.string({
+            'label':'orderStatus',
+            'required': true,
+            'errorAfterField': true,
+            'cssClasses': {
+                label: ['form-label']
+            },
+            'widget': widgets.select(),
+            'choices': status
+        })
+    })
+}
 module.exports = {createProductForm, bootstrapField, createRegistrationForm, createLoginForm, createSearchForm, 
-createOrderSearchForm, createOrderStatusForm}
+createOrderSearchForm, createOrderStatusForm, updateOrderStatusForm}
