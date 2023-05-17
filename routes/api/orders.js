@@ -11,9 +11,9 @@ const { getOrdersByUserId } = require('../../dal/orders');
 //     }
 // })
 
-router.get('/', async (req, res) => {
+router.get('/:user_id', async (req, res) => {
     try {
-        const orders = await getOrdersByUserId(req.user.id);
+        const orders = await getOrdersByUserId(req.params.user_id);
         res.json(orders);
     } catch (e) {
         res.send(e)
