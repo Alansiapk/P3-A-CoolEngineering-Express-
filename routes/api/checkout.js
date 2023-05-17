@@ -36,7 +36,7 @@ router.get('/:user_id/checkout', express.json(), async(req,res)=>{
          // save the quantity data along with the product id
          meta.push({
             user_id: i.get('user_id'),
-            product_id: i.get('variant_id'),
+            product_id: i.get('product_id'),
             quantity: i.get('quantity')
         })
     }

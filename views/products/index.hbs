@@ -18,11 +18,13 @@
 {{#block 'content'}}
 
 <h2>Search</h2>
-<form method="GET">
-   {{{form}}}
-    <input type="submit" class="mb-3 mt-3 btn btn-primary" value="Search"/>
-</form>
-
+<div class="flex">
+    <form method="GET">
+        {{{form}}}
+        <input type="submit" class="mb-3 mt-3 btn btn-primary" value="Search" />
+    </form>
+    <a href="products/create"><button class="btn btn-success">Add Product</button></a>
+</div>
 <table class="table">
     <thead>
         <tr>

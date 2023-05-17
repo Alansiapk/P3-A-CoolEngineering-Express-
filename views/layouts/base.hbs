@@ -14,30 +14,52 @@
 </head>
 
 <body>
-    <div class="container">
-    {{#if success_messages }}        
-            {{#each success_messages}}
-                <div class="alert alert-success">
-                    {{this}}
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="javascript:void(0)">Logo</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mynavbar">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/products">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/orders">Orders</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <a href="/users/login"><button class="btn btn-primary" type="button">Login</button></a>
+                    <a href="/users/logout"><button class="btn btn-primary ms-3" type="button">Log out</button></a>
                 </div>
-            {{/each}}        
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        {{#if success_messages }}
+        {{#each success_messages}}
+        <div class="alert alert-success">
+            {{this}}
+        </div>
+        {{/each}}
         {{/if}}
 
         {{#if error_messages}}
-            {{#each error_messages}}
-                <div class="alert alert-danger">
-                    {{this}}
-                </div>
-            {{/each}}       
-        {{/if}}    
-    {{#block 'content'}}
-    {{/block}}
+        {{#each error_messages}}
+        <div class="alert alert-danger">
+            {{this}}
+        </div>
+        {{/each}}
+        {{/if}}
+        {{#block 'content'}}
+        {{/block}}
     </div>
     <div>
         Today's Date: {{date}}
     </div>
     {{#block 'js'}}
-        {{/block}}
+    {{/block}}
 
 </body>
 
