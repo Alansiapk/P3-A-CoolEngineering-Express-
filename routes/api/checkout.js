@@ -136,6 +136,8 @@ router.post('/process_payment', express.raw({type: 'application/json'}), async (
     res.send({ received: true });
 })
 
-
+router.get("/success", async (req,res) =>{
+    res.redirect("https://phenomenal-choux-91c842.netlify.app")
+})
 
 module.exports = router;
